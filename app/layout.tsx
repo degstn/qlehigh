@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next"
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ibmPlexMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
+      <Analytics/>
     </html>
   );
 }
