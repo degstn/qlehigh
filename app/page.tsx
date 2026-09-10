@@ -1,17 +1,24 @@
 import Image from "next/image";
+import Qubit from "./qubit";
 
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-10 px-8 py-16">
-      <Image
-        src="/qatlsvg.svg"
-        alt="Quantum at Lehigh"
-        width={856}
-        height={359}
-        preload
-        className="h-auto w-56 sm:w-72"
-      />
-      <p className="text-base sm:text-lg">Coming soon.</p>
+    <main className="holding-page">
+      <header className="identity">
+        <div className="club-identity">
+          <Image
+            src="/qatlsvg.svg"
+            alt=""
+            width={856}
+            height={359}
+            preload
+            className="club-logo"
+          />
+          <span className="club-name">Quantum @ Lehigh</span>
+        </div>
+        <h1>Coming soon.</h1>
+      </header>
+      <Qubit />
     </main>
   );
 }

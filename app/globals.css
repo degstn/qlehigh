@@ -1,18 +1,132 @@
 @import "tailwindcss";
 
 :root {
-  --background: #c5dbf2;
-  --foreground: #653819;
+  --brand-brown: #653819;
+  --brand-blue: #c5dbf2;
+  --background: var(--brand-blue);
+  --foreground: var(--brand-brown);
+  --muted: color-mix(in srgb, var(--brand-brown) 85%, var(--brand-blue));
+  --line: color-mix(in srgb, var(--brand-brown) 30%, var(--brand-blue));
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-instrument-sans);
+  --font-sans: var(--font-ibm-plex-mono);
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
+* { box-sizing: border-box; }
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-instrument-sans), Helvetica, Arial, sans-serif;
+  font-family: var(--font-ibm-plex-mono), "SFMono-Regular", Consolas, monospace;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button:focus-visible, summary:focus-visible, a:focus-visible { outline: 1px solid var(--brand-brown); outline-offset: 3px; }
+::selection { color: var(--brand-blue); background: var(--brand-brown); }
+
+.holding-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  padding: 48px;
+}
+.identity { display: flex; flex-wrap: wrap; width: min(1120px, 100%); align-items: center; justify-content: space-between; gap: 16px; }
+.club-identity { display: flex; align-items: center; gap: 16px; }
+.club-logo { width: 88px; height: auto; }
+.club-name { font-size: .8125rem; line-height: 1.4; white-space: nowrap; }
+.identity h1 { font-size: .875rem; font-weight: 400; line-height: 1.4; color: var(--muted); margin: 0; }
+.qubit-toy { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr); align-items: center; gap: clamp(40px, 6vw, 88px); width: min(1120px, 100%); }
+.qubit-inspector { min-width: 0; }
+.orb-stage { position: relative; width: min(560px, 100%); margin: 0; }
+.qubit-orb { display: block; width: 100%; height: auto; overflow: visible; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.qubit-orb:focus { outline: none; }
+.qubit-orb:focus-visible .orb-body { stroke-width: 2.5; }
+.qubit-orb path, .qubit-orb circle, .qubit-orb ellipse, .qubit-orb rect { vector-effect: non-scaling-stroke; }
+.qubit-toy[data-dragging="true"] .qubit-orb { cursor: grabbing; }
+.orb-axis { fill: none; stroke: var(--line); stroke-width: 1; }
+.orb-body { fill: none; stroke: var(--brand-brown); stroke-width: 1.2; }
+.orb-scale { fill: none; stroke: var(--brand-brown); stroke-width: 1; opacity: .6; }
+.orb-grid { fill: none; stroke: var(--brand-brown); stroke-width: 1; opacity: .42; }
+.orb-grid-secondary { opacity: .55; }
+.angle-arc { fill: none; stroke: var(--brand-brown); stroke-width: 1; opacity: .7; }
+.orb-vector { transform-origin: 160px 160px; }
+.orb-vector > path { stroke: var(--brand-brown); stroke-width: 1.7; }
+.vector-center { fill: var(--brand-brown); }
+.vector-handle { fill: var(--brand-brown); stroke: var(--brand-blue); stroke-width: 1.5; }
+.pole { position: absolute; z-index: 1; left: 50%; transform: translateX(-50%); background: var(--background); padding-inline: 4px; color: var(--foreground); font-size: .875rem; line-height: 1; pointer-events: none; }
+.pole-zero { top: 0; }
+.pole-one { bottom: 0; }
+.basis-label { position: absolute; top: 50%; transform: translateY(-50%); background: var(--background); color: var(--muted); font-size: .75rem; line-height: 1; pointer-events: none; }
+.basis-minus { left: 0; }
+.basis-plus { right: 0; }
+.state-math { margin: 0; }
+.angle-label { margin: 0 0 8px; color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+.state-equation { margin: 0; font-size: 1rem; font-variant-numeric: tabular-nums; line-height: 1.6; }
+.state-equation span span { display: inline-block; min-width: 4.8ch; text-align: right; }
+.probabilities { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 10px; font-size: .875rem; }
+.probabilities > span { display: flex; gap: 8px; white-space: nowrap; }
+.probabilities > span > span { color: var(--muted); min-width: 4ch; font-variant-numeric: tabular-nums; }
+.toy-controls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.measure-button, .reset-button { border: 1px solid var(--line); border-radius: 0; padding: 3px 9px; min-height: 28px; background: transparent; color: var(--foreground); font-size: .875rem; line-height: 1.4; cursor: pointer; }
+.measure-button { border-color: var(--foreground); font-weight: 500; }
+.measurement-readout { min-height: 21px; margin-top: 9px; }
+.measurement-result, .play-hint { margin: 0; font-size: .8125rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
+.measurement-context, .play-hint { color: var(--muted); }
+.math-details { margin-top: 4px; font-size: .8125rem; }
+.math-details summary { cursor: pointer; list-style: none; width: fit-content; padding-block: 5px; color: var(--muted); }
+.math-details summary::-webkit-details-marker { display: none; }
+.math-details summary::before { content: "+ "; }
+.math-details[open] summary::before { content: "− "; }
+.math-explanation { font-size: .875rem; line-height: 1.65; padding-top: 8px; }
+.math-explanation p { margin: 0 0 12px; }
+.math-explanation .general-equation { font-size: .875rem; }
+.math-explanation a { color: var(--brand-brown); text-underline-offset: 4px; }
+.social-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; font-size: .8125rem; }
+.social-links a { display: inline-flex; align-items: center; gap: 6px; padding-block: 4px; color: var(--muted); text-decoration: none; }
+.social-icon { display: block; flex-shrink: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+
+@media (hover: hover) {
+  .measure-button:hover { background: var(--brand-brown); color: var(--brand-blue); }
+  .reset-button:hover { border-color: var(--brand-brown); }
+  .math-details summary:hover { color: var(--brand-brown); }
+  .social-links a:hover { color: var(--brand-brown); text-decoration: underline; text-underline-offset: 4px; }
+}
+.measure-button:active { background: var(--brand-brown); color: var(--brand-blue); }
+@media (pointer: coarse) {
+  .measure-button, .reset-button { min-height: 40px; padding: 6px 10px; }
+  .math-details summary { min-height: 32px; padding-block: 8px; }
+}
+@media (max-width: 1050px) {
+  .holding-page { padding: 32px; gap: 36px; }
+  .qubit-toy { grid-template-columns: minmax(0, 1fr) minmax(300px, 1fr); gap: 32px; }
+  .state-equation { font-size: .9375rem; }
+}
+@media (max-width: 839px) {
+  .holding-page { gap: 32px; }
+  .qubit-toy { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .orb-stage { width: min(400px, 100%); justify-self: center; }
+  .qubit-inspector { width: min(400px, 100%); justify-self: center; }
+}
+@media (max-width: 480px) {
+  .holding-page { padding: 24px; gap: 28px; }
+  .club-identity { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .club-logo { width: 72px; }
+  .orb-stage { width: min(320px, 100%); }
+  .qubit-toy { gap: 20px; }
+  .state-equation { font-size: .875rem; }
+}
+@media (max-height: 550px) and (min-width: 840px) {
+  .holding-page { gap: 24px; padding-block: 24px; }
+  .orb-stage { width: min(360px, 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
